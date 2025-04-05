@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel</title>
+    <link rel="stylesheet" href="/static/upload_excel_file.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/upload_excel_file.css') }}">
+    <script>
+        function validateFileInput() {
+            const fileInput = document.querySelector('input[type="file"]');
+            const filePath = fileInput.value;
+            const allowedExtensions = /(\.xlsx|\.xls)$/i;
+
+            if (!allowedExtensions.exec(filePath)) {
+                alert("Please upload a valid Excel file (.xlsx or .xls only).");
+                fileInput.value = '';
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Upload Excel File</h1>
+    <form action="/upload_excel_file" method="post" enctype="multipart/form-data" onsubmit="return validateFileInput()">
+        <input type="file" name="file" accept=".xlsx,.xls">
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
+    <!-- Back to Dashboard -->
+    <a href="/" class="back-button">Back to Dashboard</a>
+</div>
+{% endblock %}

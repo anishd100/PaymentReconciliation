@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<div class="sidebar">
+    <img src="https://lceplpmprod.btltech.xyz/assets/images/lcpl.png" alt="logo-image" class="logo">
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="#" class="nav-link active">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        <li class="nav-item">
+    <!-- Use url_for() to generate the correct route dynamically -->
+        <!-- Excel Icon -->
+        <a href="upload_excel_file" class="nav-link">
+        <i class="fas fa-file-excel"></i> Import Excel
+       </a>
+      </li>
+
+
+<li class="nav-item">
+            <a href="/report" class="nav-link">
+                <i class="fas fa-cog"></i> Report
+            </a>
+        </li>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.getElementById('reportDropdown');
+        const menu = document.getElementById('reportMenu');
+
+        dropdown.addEventListener('click', function (event) {
+            event.preventDefault();
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!dropdown.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+    </ul>
+    <div class="user-section">
+        <img src="avatar-placeholder.png" alt="User Avatar">
+        <div class="user-info">
+            <span>btladmin</span>
+            <span class="role">admin</span>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="menu">
+        <div class="card">
+            <h2>Profile</h2>
+            <a class="btn" href="/add_profile">Go ➜</a>
+        </div>
+        <div class="card">
+            <h2>State</h2>
+            <a class="btn" href="/add_state">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>District</h2>
+            <a class="btn" href="/add_district">Go ➜</a>
+        </div>
+        <div class="card">
+            <h2>Blocks</h2>
+            <a class="btn" href="/add_block">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>Village</h2>
+            <a class="btn" href="/add_village">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>Sub-Contractor</h2>
+            <a class="btn" href="/add_subcontractor">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>Invoice</h2>
+            <a class="btn" href="/invoice">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>Payment</h2>
+            <a class="btn" href="/add_payment">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>GST Release</h2>
+            <a class="btn" href="add_gst_release">Go ➜</a>
+        </div>
+
+        <div class="card">
+            <h2>Hold Amount Type</h2>
+            <a class="btn" href="/add_hold_amount_type">Go ➜</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

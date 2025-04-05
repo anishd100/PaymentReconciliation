@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Payment</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h2>Add Payment</h2>
+
+<form action="/add_payment" method="POST" onsubmit="showSuccessAlert(event)">
+    <!--    <label for="invoice_id">PMC No:</label><br>-->
+    <!--    <select id="invoice_id" name="invoice_id" required>-->
+    <!--        <option>Select option</option>-->
+    <!--        {% for invoice in invoices %}-->
+    <!--        <option value="{{ invoice[0] }}">{{ invoice[2] }} - {{ invoice[1] }}</option>-->
+    <!--        {% endfor %}-->
+    <!--    </select><br><br>-->
+
+    <label for="PMC_No">PMC No:</label><br>
+    <input type="number" step="0.01" id="PMC_No" name="PMC_No" required><br><br>
+
+    <label for="invoice_No">Invoice No:</label><br>
+    <input type="number" step="0.01" id="invoice_No" name="invoice_No" required><br><br>
+
+    <label for="amount">Amount:</label><br>
+    <input type="number" step="0.01" id="amount" name="amount" required><br><br>
+
+    <label for="tds_amount">TDS Amount:</label><br>
+    <input type="number" step="0.01" id="tds_amount" name="tds_amount" required><br><br>
+
+    <label for="total_amount">Total Amount:</label><br>
+    <input type="number" step="0.01" id="total_amount" name="total_amount" required><br><br>
+
+    <label for="utr">UTR:</label><br>
+    <input type="text" id="utr" name="utr"><br><br>
+
+    <button type="submit">Submit Payment</button>
+</form>
+
+<!-- Success Popup -->
+<div id="successPopup" class="success-popup">
+    <i>&#10004;</i> Payment added successfully!
+</div>
+
+<h3>Payment History</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Payment ID</th>
+        <th>PMC No</th>
+        <th>Invoice No</th>
+        <th>Amount</th>
+        <th>TDS Amount</th>
+        <th>Total Amount</th>
+        <th>UTR</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for payment in payments %}
+    <tr>
+        <td>{{ payment[0] }}</td>
+        <td>{{ payment[1] }}</td>
+        <td>{{ payment[2] }}</td>
+        <td>{{ payment[3] }}</td>
+        <td>{{ payment[4] }}</td>
+        <td>{{ payment[5] }}</td>
+        <td>{{ payment[6] }}</td>
+        <td><a href="/edit_payment/{{ payment[0] }}">Edit</a></td>
+        <td><a href="/delete_payment/{{ payment[0] }}"
+               onclick="return confirm('Are you sure you want to delete this payment?')">Delete</a></td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<!-- Dashboard Back Button -->
+<a href="/" class="back-button">Back to Dashboard</a>
+<!-- Link External JavaScript File -->
+<script src="{{ url_for('static', filename='js/showSuccessAlert.js') }}"></script>
+
+{% endblock %}

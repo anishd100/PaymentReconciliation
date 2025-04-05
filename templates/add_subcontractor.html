@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SubContractor</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="static/js/validation.js" defer></script>
+</head>
+<body>
+
+<h2>Add Sub-Contractor</h2>
+<form method="POST" onsubmit="showSuccessAlert(event)">
+<!--    <label>Enter Contractor Id :</label>-->
+<!--    <input type="number" name="Contractor_Id" required><br>-->
+
+    <label>Enter Contractor Name :</label>
+    <input type="text" name="Contractor_Name" id="name" onkeyup="validateName()" required><br>
+<span id="error-message-name" style="color: red; font-size: 0.9em;"></span>
+    <label>Address :</label>
+    <input type="text" name="Address" required><br>
+
+    <label>Mobile No :</label>
+    <input type="text" name="Mobile_No"  id="contact" onkeyup="validateContact()" required><br>
+   <span id="invalid-contact" style="color: red; font-size: 0.9em;"></span>
+    <label>PAN No :</label>
+    <input type="text" name="PAN_No" id="pan" onkeyup="validatePAN()" required><br>
+<span id="invalid-pan" style="color: red; font-size: 0.9em;"></span>
+    <label>Email :</label>
+    <input type="email" name="Email" id="email" onkeyup="validateEmail()" required><br>
+   <span id="invalid-email" style="color: red; font-size: 0.9em;"></span>
+    <label>Gender :</label>
+    <select name="Gender" required>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select><br>
+
+    <label>GST Registration Type :</label>
+    <input type="text" name="GST_Registration_Type"  required><br>
+
+    <label>GST No :</label>
+    <input type="text" name="GST_No" id="gst" onkeyup="validateGST()" required><br>
+ <span id="invalid-gst" style="color: red; font-size: 0.9em;"></span>
+    <label>Enter New Password :</label>
+    <input type="text" name="Contractor_password" required><br>
+
+    <button type="submit">Submit</button>
+</form>
+<!-- Success Popup -->
+<div id="successPopup" class="success-popup">
+    <i>&#10004;</i> Contractor added successfully!
+</div>
+
+<h2>Display SubContractor</h2>
+<table border="1">
+    <tr>
+        <th>Contractor ID</th>
+        <th>Contractor Name</th>
+        <th>Address</th>
+        <th>Mobile No</th>
+        <th>PAN No</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>GST Registration Type</th>
+        <th>GST No</th>
+        <th>Contractor New Password </th>
+        <th>Update Contractor</th>
+        <th>Delete Contractor</th>
+    </tr>
+    {% for subc in subcontractor %}
+    <tr>
+        <td>{{ subc[0] }}</td>
+        <td>{{ subc[1] }}</td>
+        <td>{{ subc[2] }}</td>
+        <td>{{ subc[3] }}</td>
+        <td>{{ subc[4] }}</td>
+        <td>{{ subc[5] }}</td>
+        <td>{{ subc[6] }}</td>
+        <td>{{ subc[7] }}</td>
+        <td>{{ subc[8] }}</td>
+        <td>{{ subc[9] }}</td>
+        <td>
+             <a href="{{ url_for('edit_subcontractor', id=subc[0]) }}">Edit</a>
+        </td>
+        <td>
+            <a href="{{ url_for('deleteSubContractor', id=subc[0]) }}"
+               onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<!-- Dashboard Back Button -->
+<a href="/" class="back-button">Back to Dashboard</a>
+<!-- Link External JavaScript File -->
+<script src="{{ url_for('static', filename='js/showSuccessAlert.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMC Report</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+<h1>PMC Report for PMC No: {{ pmc_no }}</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Village Name</th>
+        <th>Work Type</th>
+        <th>Invoice Details</th>
+        <th>Invoice Date</th>
+        <th>Invoice No</th>
+        <th>Basic Amount</th>
+        <th>Debit Amount</th>
+        <th>After Debit Amount</th>
+        <th>Amount</th>
+        <th>GST Amount</th>
+        <th>TDS Amount</th>
+        <th>SD Amount</th>
+        <th>On Commission</th>
+        <th>Hydro Testing</th>
+        <th>Hold Amount</th>
+        <th>GST SD Amount</th>
+        <th>Final Amount</th>
+        <th>GST Release Amount</th>
+        <th>GST Release Final Amount</th>
+        <th>Payment Amount</th>
+        <th>Payment TDS Amount</th>
+        <th>Payment Total Amount</th>
+        <th>Payment UTR</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for invoice in invoices %}
+    <tr>
+        <td>{{ invoice.Village_Name }}</td>
+        <td>{{ invoice.Work_Type }}</td>
+        <td>{{ invoice.Invoice_Details }}</td>
+        <td>{{ invoice.Invoice_Date }}</td>
+        <td>{{ invoice.Invoice_No }}</td>
+        <td>{{ invoice.Basic_Amount }}</td>
+        <td>{{ invoice.Debit_Amount }}</td>
+        <td>{{ invoice.After_Debit_Amount }}</td>
+        <td>{{ invoice.Amount }}</td>
+        <td>{{ invoice.GST_Amount }}</td>
+        <td>{{ invoice.TDS_Amount }}</td>
+        <td>{{ invoice.SD_Amount }}</td>
+        <td>{{ invoice.On_Commission }}</td>
+        <td>{{ invoice.Hydro_Testing }}</td>
+        <td>{{ invoice.Hold_Amount }}</td>
+        <td>{{ invoice.GST_SD_Amount }}</td>
+        <td>{{ invoice.Final_Amount }}</td>
+        <td>{{ invoice.GST_Release_Amount }}</td>
+        <td>{{ invoice.GST_Release_Final_Amount }}</td>
+        <td>{{ invoice.Payment_Amount }}</td>
+        <td>{{ invoice.Payment_TDS_Amount }}</td>
+        <td>{{ invoice.Payment_Total_Amount }}</td>
+        <td>{{ invoice.Payment_UTR }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<a href="/download_pmc_report/{{ pmc_no }}"><button class="button">Download PMC Report</button></a>
+</body>
+</html>

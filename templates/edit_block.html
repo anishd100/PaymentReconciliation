@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Block</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<h2>Edit Block</h2>
+
+<!-- Edit Block Form -->
+<form method="POST">
+<!-- State Selection -->
+<label for="state_Id">State:</label>
+<select name="state_Id" required>
+    <option value="" disabled>Select State</option>
+    {% for state in states %}
+        <option value="{{ state['State_ID'] }}" {% if state['State_ID'] == block_data['State_Id'] %} selected {% endif %}>
+            {{ state['State_Name'] }}
+        </option>
+    {% endfor %}
+</select><br><br>
+
+<!-- District Selection -->
+<label for="district_Id">District:</label>
+<select name="district_Id" required>
+    <option value="" disabled>Select District</option>
+    {% for district in districts %}
+        <option value="{{ district['District_ID'] }}" {% if district['District_ID'] == block_data['District_id'] %} selected {% endif %}>
+            {{ district['District_Name'] }}
+        </option>
+    {% endfor %}
+</select><br><br>
+
+<!-- Block Name -->
+<label for="block_Name">Block Name:</label>
+<input type="text" name="block_Name" value="{{ block_data['Block_Name'] }}" placeholder="Enter Block Name" required><br><br>
+
+<!-- Submit Button -->
+<button type="submit">Update Block</button>
+
+</form>
+
+<!-- Back to Dashboard -->
+<a href="/" class="back-button">Back to Dashboard</a>
+
+</body>
+</html>

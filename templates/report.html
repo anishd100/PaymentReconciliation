@@ -1,0 +1,201 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Search Contractor Report</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Search Contractor Report</h1>-->
+
+<!--    <form id="search-form">-->
+<!--        <label for="subcontractor_name">Enter Subcontractor Name:</label>-->
+<!--        <input type="text" name="subcontractor_name" id="subcontractor_name" required>-->
+<!--        <button type="submit">Search</button>-->
+<!--    </form>-->
+
+<!--    <h2>Report Data</h2>-->
+<!--    <table border="1" id="result-table">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>PMC No</th>-->
+<!--                <th>Village Name</th>-->
+<!--                <th>Work Type</th>-->
+<!--                <th>Invoice Details</th>-->
+<!--                <th>Invoice Date</th>-->
+<!--                <th>Invoice No</th>-->
+<!--                <th>Basic Amount</th>-->
+<!--                <th>Debit Amount</th>-->
+<!--                <th>After Debit Amount</th>-->
+<!--                <th>Amount</th>-->
+<!--                <th>GST Amount</th>-->
+<!--                <th>TDS Amount</th>-->
+<!--                <th>SD Amount</th>-->
+<!--                <th>On Commission</th>-->
+<!--                <th>Hydro Testing</th>-->
+<!--                <th>Hold Amount</th>-->
+<!--                <th>GST SD Amount</th>-->
+<!--                <th>Final Amount</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            &lt;!&ndash; Data will be inserted here dynamically &ndash;&gt;-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <a href="/download" class="button">Download Report</a>-->
+<!--    <br>-->
+<!--    <a href="/" class="back-button">Back to Dashboard</a>-->
+
+<!--    <script>-->
+<!--        $(document).ready(function () {-->
+<!--            $('#search-form').submit(function (event) {-->
+<!--                event.preventDefault();-->
+<!--                let subcontractorName = $('#subcontractor_name').val();-->
+
+<!--                $.ajax({-->
+<!--                    type: 'POST',-->
+<!--                    url: '/search_contractor',-->
+<!--                    data: { subcontractor_name: subcontractorName },-->
+<!--                    success: function (data) {-->
+<!--                        let tableBody = $('#result-table tbody');-->
+<!--                        tableBody.empty();-->
+
+<!--                        if (data.length === 0) {-->
+<!--                            tableBody.append('<tr><td colspan="18">No data found</td></tr>');-->
+<!--                        } else {-->
+<!--                            data.forEach(function (row) {-->
+<!--                                tableBody.append(`-->
+<!--                                    <tr>-->
+<!--                                        <td>${row.PMC_No}</td>-->
+<!--                                        <td>${row.Village_Name}</td>-->
+<!--                                        <td>${row.Work_Type}</td>-->
+<!--                                        <td>${row.Invoice_Details}</td>-->
+<!--                                        <td>${row.Invoice_Date}</td>-->
+<!--                                        <td>${row.Invoice_No}</td>-->
+<!--                                        <td>${row.Basic_Amount}</td>-->
+<!--                                        <td>${row.Debit_Amount}</td>-->
+<!--                                        <td>${row.After_Debit_Amount}</td>-->
+<!--                                        <td>${row.Amount}</td>-->
+<!--                                        <td>${row.GST_Amount}</td>-->
+<!--                                        <td>${row.TDS_Amount}</td>-->
+<!--                                        <td>${row.SD_Amount}</td>-->
+<!--                                        <td>${row.On_Commission}</td>-->
+<!--                                        <td>${row.Hydro_Testing}</td>-->
+<!--                                        <td>${row.Hold_Amount}</td>-->
+<!--                                        <td>${row.GST_SD_Amount}</td>-->
+<!--                                        <td>${row.Final_Amount}</td>-->
+<!--                                    </tr>-->
+<!--                                `);-->
+<!--                            });-->
+<!--                        }-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Search</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>Search Contractor Report</h2>
+
+<form id="search-form">
+    <label for="subcontractor_name">Subcontractor Name:</label>
+    <input type="text" id="subcontractor_name" name="subcontractor_name">
+
+    <label for="pmc_no">PMC No:</label>
+    <input type="text" id="pmc_no" name="pmc_no">
+
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state">
+
+    <label for="district">District:</label>
+    <input type="text" id="district" name="district">
+
+    <label for="block">Block:</label>
+    <input type="text" id="block" name="block">
+
+    <label for="village">Village:</label>
+    <input type="text" id="village" name="village">
+
+    <label for="year_from">Year From:</label>
+    <input type="date" id="year_from" name="year_from">
+
+    <label for="year_to">Year To:</label>
+    <input type="date" id="year_to" name="year_to">
+</form>
+
+<h2>Contractor List</h2>
+<table border="1" id="result-table">
+    <thead>
+    <tr>
+        <th>Contractor Name</th>
+        <th>PMC No</th>
+        <th>State</th>
+        <th>District</th>
+        <th>Block</th>
+        <th>Village</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Results will be dynamically populated -->
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        function fetchResults() {
+            let formData = $('#search-form').serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: '/search_contractor',
+                data: formData,
+                success: function (data) {
+                    let tableBody = $('#result-table tbody');
+                    tableBody.empty();
+
+                    if (data.length === 0) {
+                        tableBody.append('<tr><td colspan="6">No data found</td></tr>');
+                    } else {
+                        data.forEach(function (row) {
+                            tableBody.append(`
+                                <tr>
+                                    <td><a href="/contractor_report/${row.Contractor_Id}" target="_blank">${row.Contractor_Name}</a></td>
+                                    <td><a href="/pmc_report/${row.PMC_No}" target="_blank">${row.PMC_No}</a></td>
+                                    <td>${row.State_Name}</td>
+                                    <td>${row.District_Name}</td>
+                                    <td>${row.Block_Name}</td>
+                                    <td>${row.Village_Name}</td>
+                                </tr>
+                            `);
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseJSON.error);
+                }
+            });
+        }
+
+        $('#search-form input').on('keyup change', function () {
+            fetchResults();
+        });
+    });
+</script>
+{% endblock %}
+
+

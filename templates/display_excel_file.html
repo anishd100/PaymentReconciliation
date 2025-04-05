@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel Data</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const errorsDiv = document.querySelector('.errors');
+            const submitButton = document.querySelector('.save-button');
+
+            // Disable the button if there are validation errors
+            if (errorsDiv && errorsDiv.querySelectorAll('.error').length > 0) {
+                submitButton.disabled = true;
+            } else {
+                submitButton.disabled = false;
+            }
+
+            // Optional: Add real-time error clearance if needed
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    // Check if there are any errors left
+                    const remainingErrors = document.querySelectorAll('.error');
+                    if (remainingErrors.length === 0) {
+                        submitButton.disabled = false;
+                    } else {
+                        submitButton.disabled = true;
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Excel Data</h1>
+
+<h2>File Information:</h2>
+<ul>
+    <li>Subcontractor: {{ file_info['Subcontractor'] }}</li>
+    <li>State: {{ file_info['State'] }}</li>
+    <li>District: {{ file_info['District'] }}</li>
+    <li>Block: {{ file_info['Block'] }}</li>
+</ul>
+
+{% if errors %}
+<div class="errors">
+    <h2>Validation Errors:</h2>
+    <ul>
+        {% for error in errors %}
+        <li class="error">{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<h2>Data Table:</h2>
+<table>
+    <thead>
+    <tr>
+        {% for var in variables %}
+        <th>{{ var }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+    <tr>
+        {% for value in row %}
+        <td><input type="text" value="{{ value }}"/></td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<form method="POST" action="/save_data">
+    <input type="text" name="subcontractor_data" value="{{ subcontractor_data['Contractor_Id'] }}">
+    <input type="text" name="state_data" value="{{ state_data['State_ID'] }}">
+    <input type="text" name="district_data" value="{{ district_data['District_ID']}}">
+    <input type="text" name="block_data" value="{{ block_data['Block_Id'] }}">
+
+
+    <!--    <input type="hidden" name="subcontractor_data" value="{{ subcontractor_data[0] }}">-->
+    <!--    <input type="hidden" name="state_data" value="{{ state_data }}">-->
+    <!--    <input type="hidden" name="district_data" value="{{ district_data }}">-->
+    <!--    <input type="hidden" name="block_data" value="{{ block_data }}">-->
+
+    <input type="hidden" name="file_info" value="{{ file_info }}">
+    <input type="hidden" name="variables" value="{{ variables | join(',') }}">
+    {% for row in data %}
+    <input type="hidden" name="data" value="{{ row | join(',') }}">
+    {% endfor %}
+    <button type="submit" class="save-button">Save Data</button>
+</form>
+
+<a href="/" class="back-button">Back to Dashboard</a>
+</body>
+</html>
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <title>Excel Data</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--    <script>-->
+<!--        function collectTableData() {-->
+<!--            let tableData = [];-->
+<!--            document.querySelectorAll("tbody tr").forEach(row => {-->
+<!--                let rowData = [];-->
+<!--                row.querySelectorAll("input").forEach(cell => {-->
+<!--                    rowData.push(cell.value);-->
+<!--                });-->
+<!--                tableData.push(rowData);-->
+<!--            });-->
+<!--            document.getElementById("table_data").value = JSON.stringify(tableData);-->
+<!--        }-->
+
+<!--        document.addEventListener("DOMContentLoaded", function () {-->
+<!--            document.getElementById("saveForm").addEventListener("submit", collectTableData);-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--    <h1>Excel Data</h1>-->
+
+<!--    <h2>File Information:</h2>-->
+<!--    <ul>-->
+<!--        <li>Subcontractor: {{ file_info['Subcontractor'] }}</li>-->
+<!--        <li>State: {{ file_info['State'] }}</li>-->
+<!--        <li>District: {{ file_info['District'] }}</li>-->
+<!--        <li>Block: {{ file_info['Block'] }}</li>-->
+<!--    </ul>-->
+
+<!--    <h2>Data Table:</h2>-->
+<!--    <table border="1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                {% for var in variables %}-->
+<!--                    <th>{{ var }}</th>-->
+<!--                {% endfor %}-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {% for row in data %}-->
+<!--                <tr>-->
+<!--                    {% for value in row %}-->
+<!--                        <td><input type="text" value="{{ value }}"></td>-->
+<!--                    {% endfor %}-->
+<!--                </tr>-->
+<!--            {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <form method="POST" action="/save_data" id="saveForm">-->
+<!--        <input type="hidden" name="subcontractor_data" value="{{ subcontractor_data['Contractor_Id'] }}">-->
+<!--        <input type="hidden" name="state_data" value="{{ state_data['State_ID'] }}">-->
+<!--        <input type="hidden" name="district_data" value="{{ district_data['District_ID'] }}">-->
+<!--        <input type="hidden" name="block_data" value="{{ block_data['Block_Id'] }}">-->
+<!--        <input type="hidden" id="table_data" name="table_data">-->
+
+<!--        <button type="submit" class="save-button">Save Data</button>-->
+<!--    </form>-->
+
+<!--    <a href="/" class="back-button">Back to Dashboard</a>-->
+<!--</body>-->
+<!--</html>-->

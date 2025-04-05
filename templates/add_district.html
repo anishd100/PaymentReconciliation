@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add District</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/validation.js') }}" defer></script>
+</head>
+<body>
+
+<h2>Add District</h2>
+
+<form method="POST" onsubmit="return showSuccessAlert(event)">
+    <label for="state_Id">State:</label>
+    <select name="state_Id" required>
+        <option value="" disabled selected>Select State</option>
+        {% for state in states %}
+        <option value="{{ state['State_ID'] }}">{{ state['State_Name'] }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Enter District:</label>
+    <input type="text" name="district_Name" placeholder="District Name" id="district-name" 
+           onkeyup="validateDistrict()" required>
+    <span id="error-message-district" class="error-message"></span>
+
+    <button type="submit" id="submit-btn">Add District</button>
+</form>
+
+<!-- Success Popup -->
+<div id="successPopup" class="success-popup">
+    ✔ District added successfully!
+</div>
+
+<h2>Display Districts</h2>
+<table border="1">
+    <tr>
+        <th>District ID</th>
+        <th>District Name</th>
+        <th>State Name</th>
+        <th>State ID</th>
+        <th>Edit District</th>
+        <th>Delete District</th>
+    </tr>
+    {% for district in districtdata %}
+    <tr>
+        <td>{{ district['District_id'] }}</td>
+        <td>{{ district['District_Name'] }}</td>
+        <td>{{ district['State_Name'] }}</td>
+        <td>{{ district['State_ID'] }}</td>
+        <td><a href="{{ url_for('edit_district', district_id=district['District_id']) }}">Edit</a></td>
+        <td><a href="{{ url_for('delete_district', district_id=district['District_id']) }}"
+       onclick="return confirm('Are you sure you want to delete this district?');">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="/" class="back-button">Back to Dashboard</a>
+
+<script>
+    window.onload = function () {
+        document.getElementById('district-name').focus();
+    };
+
+    function validateDistrict() {
+        const input = document.getElementById('district-name');
+        const errorMessage = document.getElementById('error-message-district');
+        const submitBtn = document.getElementById('submit-btn');
+        let value = input.value.replace(/[^a-zA-Z\s]/g, ''); // Only letters and spaces
+        input.value = value;
+
+        if (value === '') {
+            errorMessage.textContent = 'District Name cannot be empty and must contain only letters.';
+            submitBtn.style.display = 'none';
+        } else {
+            errorMessage.textContent = '';
+            checkDistrictExists(value, submitBtn, errorMessage);
+        }
+    }
+
+    function checkDistrictExists(districtName, submitBtn, errorMessage) {
+        fetch("{{ url_for('check_district') }}", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "district_Name=" + encodeURIComponent(districtName)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                errorMessage.textContent = 'District already exists!';
+                submitBtn.style.display = 'none';
+            } else {
+                errorMessage.textContent = '';
+                submitBtn.style.display = 'block';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function showSuccessAlert(event) {
+        const input = document.getElementById('district-name');
+        const errorMessage = document.getElementById('error-message-district');
+        const successPopup = document.getElementById('successPopup');
+
+        if (input.value.trim() === '' || errorMessage.textContent !== '') {
+            return false;
+        }
+
+        successPopup.style.display = 'block';
+        setTimeout(() => {
+            successPopup.style.display = 'none';
+        }, 3000);
+
+        return true;
+    }
+</script>
+
+</body>
+</html>
+
+
+<!--{% extends 'base.html' %}-->
+
+<!--{% block title %}Add District{% endblock %}-->
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--<script src="static/js/validation.js" defer></script>-->
+<!--{% block content %}-->
+<!--    <h2>Add District</h2>-->
+
+<!--    <form method="POST">-->
+<!--        <select name="state_Id" required>-->
+<!--            <option value="" disabled selected>Select State</option>-->
+<!--            {% for state in states %}-->
+<!--            <option value="{{ state['State_ID'] }}">{{ state['State_Name'] }}</option>-->
+<!--            {% endfor %}-->
+<!--        </select>-->
+
+<!--        <label>Enter District :</label>-->
+<!--        <input type="text" name="district_Name" placeholder="District Name" id="district-name" onkeyup="validateDistrict()" required>-->
+<!--        <span id="error-message-district" class="error-message"></span>-->
+
+<!--        <button type="submit" id="submit-btn">Add District</button>-->
+<!--    </form>-->
+
+<!--    <h2>Display Districts</h2>-->
+<!--    <table border="1">-->
+<!--        <tr>-->
+<!--            <th>District ID</th>-->
+<!--            <th>District Name</th>-->
+<!--            <th>State Name</th>-->
+<!--            <th>State ID</th>-->
+<!--            <th>Edit District</th>-->
+<!--            <th>Delete District</th>-->
+<!--        </tr>-->
+<!--        {% for district in districtdata %}-->
+<!--        <tr>-->
+<!--            <td>{{ district['District_id'] }}</td>-->
+<!--            <td>{{ district['District_Name'] }}</td>-->
+<!--            <td>{{ district['State_Name'] }}</td>-->
+<!--            <td>{{ district['State_ID'] }}</td>-->
+<!--            <td><a href="{{ url_for('edit_district', district_id=district['District_id']) }}">Edit</a></td>-->
+<!--            <td><a href="{{ url_for('delete_district', district_id=district['District_id']) }}"-->
+<!--           onclick="return confirm('Are you sure you want to delete this district?');">Delete</a></td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+
+<!--    <script>-->
+<!--        function validateDistrict() {-->
+<!--            const input = document.getElementById('district-name');-->
+<!--            const errorMessage = document.getElementById('error-message-district');-->
+<!--            const submitBtn = document.getElementById('submit-btn');-->
+<!--            let value = input.value.replace(/[^a-zA-Z\s]/g, ''); // Only letters and spaces-->
+<!--            input.value = value;-->
+
+<!--            if (value === '') {-->
+<!--                errorMessage.textContent = 'District Name cannot be empty and must contain only letters.';-->
+<!--                submitBtn.disabled = true;-->
+<!--            } else {-->
+<!--                errorMessage.textContent = '';-->
+<!--                submitBtn.disabled = false;-->
+<!--                checkDistrictExists(value, submitBtn, errorMessage);-->
+<!--            }-->
+<!--        }-->
+
+<!--        function checkDistrictExists(districtName, submitBtn, errorMessage) {-->
+<!--            fetch("{{ url_for('check_district') }}", {-->
+<!--                method: "POST",-->
+<!--                headers: { "Content-Type": "application/x-www-form-urlencoded" },-->
+<!--                body: "district_Name=" + encodeURIComponent(districtName)-->
+<!--            })-->
+<!--            .then(response => response.json())-->
+<!--            .then(data => {-->
+<!--                if (data.exists) {-->
+<!--                    errorMessage.textContent = 'District already exists!';-->
+<!--                    submitBtn.disabled = true;-->
+<!--                } else {-->
+<!--                    errorMessage.textContent = '';-->
+<!--                    submitBtn.disabled = false;-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(error => console.error('Error:', error));-->
+<!--        }-->
+<!--    </script>-->
+<!--{% endblock %}-->
+s

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit District</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h2>Edit District</h2>
+
+<form method="POST">
+    <label for="state_Id">State :</label>
+    <select name="state_Id" required>
+        <option value="" disabled>Select State</option>
+        {% for state in states %}
+            <option value="{{ state['State_ID'] }}" {% if state['State_ID'] == district['State_Id'] %} selected {% endif %}>
+                {{ state['State_Name'] }} 
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Enter District :</label>
+    <input type="text" name="district_Name" placeholder="District Name" value="{{ district['District_Name'] }}" required>
+    
+    <button type="submit">Update District</button>
+</form>
+
+<!-- Back to Add District page -->
+<a href="{{ url_for('add_district') }}" class="back-button">Back to Add District</a>
+
+</body>
+</html>

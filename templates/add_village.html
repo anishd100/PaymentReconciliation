@@ -1,0 +1,111 @@
+
+
+{% extends 'base.html' %}
+{% block content %}
+    <title>Add Village</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="static/js/validation.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <div class="form-block">
+        <h2>Create a New Village</h2>
+        <form method="POST" onsubmit="showSuccessAlert(event)">
+            <label for="state_Id">State:</label>
+            <select id="state_Id" name="state_Id" required>
+                <option value="" disabled selected>Select State</option>
+                {% for state in states %}
+                <option value="{{ state['State_ID'] }}">{{ state['State_Name'] }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="district_Id">Select District:</label>
+            <select id="district_Id" name="district_Id" required disabled>
+                <option value="" disabled selected>Select District</option>
+            </select>
+
+            <label for="block_Id">Select Block:</label>
+            <select id="block_Id" name="block_Id" required disabled>
+                <option value="" disabled selected>Select Block</option>
+            </select>
+
+            <label for="Village_Name">Enter Village Name:</label>
+            <input type="text" name="Village_Name" placeholder="Village Name" id="name" onkeyup="validateName()" required>
+
+            <button type="submit">Add Village</button>
+        </form>
+    </div>
+
+    <h2>Existing Villages</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Village Name</th>
+                <th>Block ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for village in villages %}
+			<tr>
+				<td>{{ village['Village_Id'] }}</td>
+				<td>{{ village['Village_Name'] }}</td>
+				<td>{{ village['Block_Id'] }}</td>
+				<td>
+					<a href="{{ url_for('edit_village', village_id=village['Village_Id']) }}">Edit</a>
+					<a href="{{ url_for('delete_village', village_id=village['Village_Id']) }}" onclick="return confirm('Are you sure?')">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#state_Id').change(function() {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.ajax({
+                    url: '/get_districts/' + stateId,
+                    type: 'GET',
+                    success: function(data) {
+                        var districtDropdown = $('#district_Id');
+                        districtDropdown.empty();
+                        districtDropdown.append('<option value="" disabled selected>Select District</option>');
+                        data.districts.forEach(function(district) {
+                            districtDropdown.append('<option value="' + district.District_id + '">' + district.District_Name + '</option>');
+                        });
+                        districtDropdown.prop('disabled', false);
+                    }
+                });
+            } else {
+                $('#district_Id, #block_Id').prop('disabled', true);
+            }
+        });
+
+        $('#district_Id').change(function() {
+            var districtId = $(this).val();
+            if (districtId) {
+                $.ajax({
+                    url: '/get_blocks/' + districtId,
+                    type: 'GET',
+                    success: function(data) {
+                        var blockDropdown = $('#block_Id');
+                        blockDropdown.empty();
+                        blockDropdown.append('<option value="" disabled selected>Select Block</option>');
+                        data.blocks.forEach(function(block) {
+                            blockDropdown.append('<option value="' + block.Block_id + '">' + block.Block_Name + '</option>');
+                        });
+                        blockDropdown.prop('disabled', false);
+                    }
+                });
+            } else {
+                $('#block_Id').prop('disabled', true);
+            }
+        });
+    });
+</script>
+{% endblock %}

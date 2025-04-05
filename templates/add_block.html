@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add Block</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- ✅ Include jQuery -->
+    <script src="{{ url_for('static', filename='js/validation.js') }}" defer></script>
+</head>
+<body>
+
+<h2>Add Block</h2>
+
+<form method="POST">
+    <label for="state_Id">Select State:</label>
+    <select id="state_Id" name="state_Id" required>
+        <option value="" disabled selected>Select State</option>
+        {% for state in states %}
+        <option value="{{ state['State_ID'] }}">{{ state['State_Name'] }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="district_Id">Select District:</label>
+    <select id="district_Id" name="district_Id" required disabled>
+        <option value="" disabled selected>Select District</option>
+    </select>
+
+    <label for="block_Name">Enter Block Name:</label>
+    <input type="text" name="block_Name" placeholder="Block Name" required>
+
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Display Blocks</h2>
+<table border="1">
+    <tr>
+        <th>Block ID</th>
+        <th>Block Name</th>
+        <th>District Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    {% for block in block_data %}
+    <tr>
+        <td>{{ block['Block_Id'] }}</td>
+        <td>{{ block['Block_Name'] }}</td>
+        <td>{{ block['District_Name'] }}</td>
+        <td><a href="{{ url_for('edit_block', block_id=block['Block_Id']) }}">Edit</a></td>
+        <td><a href="{{ url_for('delete_block', block_id=block['Block_Id']) }}" onclick="return confirm('Are you sure?');">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="/" class="back-button">Back to Dashboard</a>
+
+<!-- ✅ JavaScript to dynamically load districts -->
+<script>
+    $(document).ready(function() {
+        $('#state_Id').change(function() {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.ajax({
+                    url: '/get_districts/' + stateId,
+                    type: 'GET',
+                    success: function(data) {
+                        var districtDropdown = $('#district_Id');
+                        districtDropdown.empty();
+                        districtDropdown.append('<option value="" disabled selected>Select District</option>'); // Default option
+
+                        data.districts.forEach(function(district) {
+                            districtDropdown.append('<option value="' + district.District_id + '">' + district.District_Name + '</option>');
+                        });
+
+                        districtDropdown.prop('disabled', false);
+                    },
+                    error: function() {
+                        alert('Error fetching districts. Please try again.');
+                    }
+                });
+            } else {
+                $('#district_Id').prop('disabled', true);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

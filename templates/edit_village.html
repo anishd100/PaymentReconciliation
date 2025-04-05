@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Village</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="form-block">
+        <h2>Edit Village</h2>
+        <form method="POST">
+            <label for="Village_Name">Village Name:</label>
+            <input type="text" name="Village_Name" id="Village_Name" value="{{ village['Village_Name'] }}" required>
+
+            <label for="block_Id">Select Block:</label>
+            <select id="block_Id" name="block_Id" required>
+                {% for state in states %}
+                    <option value="{{ state['State_ID'] }}" {% if state['State_ID'] == village['Block_Id'] %} selected {% endif %}>
+                        {{ state['State_Name'] }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Update Village</button>
+        </form>
+    </div>
+</div>
+
+<a href="{{ url_for('add_village') }}" class="back-button">Back to Village List</a>
+
+</body>
+</html>

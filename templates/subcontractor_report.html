@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Report</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<h1>Report</h1><br>
+
+{% if contInfo %}
+<h2>{{ contInfo.Contractor_Name }}</h2>
+<h3>State Name :{{ contInfo.State_Name }} </h3>
+<h3>District Name:{{ contInfo.District_Name }} </h3>
+<h3>Block Name : {{ contInfo.Block_Name }}</h3>
+<h3>Mobile No : {{ contInfo.Mobile_No }}</h3>
+<h3>GST Registration Type :{{ contInfo.GST_Registration_Type }}</h3>
+<h3>GST No : {{ contInfo.GST_No }}</h3>
+{% else %}
+<p>No contractor found.</p>
+{% endif %}
+
+<br>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>PMC No</th>
+        <th>Village Name</th>
+        <th>Work Type</th>
+        <th>Invoice Details</th>
+        <th>Invoice Date</th>
+        <th>Invoice No</th>
+        <th>Basic Amount</th>
+        <th>Debit Amount</th>
+        <th>After Debit Amount</th>
+        <th>Final Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in invoices %}
+    <tr>
+        <td>{{ row.PMC_No }}</td>
+        <td>{{ row.Village_Name }}</td>
+        <td>{{ row.Work_Type }}</td>
+        <td>{{ row.Invoice_Details }}</td>
+        <td>{{ row.Invoice_Date }}</td>
+        <td>{{ row.Invoice_No }}</td>
+        <td>{{ row.Basic_Amount }}</td>
+        <td>{{ row.Debit_Amount }}</td>
+        <td>{{ row.After_Debit_Amount }}</td>
+        <td>{{ row.Final_Amount }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<a href="/" class="back-button">Back to Dashboard</a>
+<a href="/download_report/{{ contractor_id }}" target="_blank">
+    <button class="button">Download Report</button>
+</a>
+</body>
+</html>
